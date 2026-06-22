@@ -1,0 +1,207 @@
+{
+  "name": "SnapCut AI - Workflows Export",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-image",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Process Image Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook Process Image Trigger\"].json[\"body\"][\"imageUrl\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Validate Request Payload",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.remove.bg/v1.0/removebg",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "={{$env.REMOVEBG_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={{$node[\"Webhook Process Image Trigger\"].json[\"body\"][\"imageUrl\"]}}"
+            },
+            {
+              "name": "size",
+              "value": "auto"
+            }
+          ]
+        },
+        "options": {
+          "responseFormat": "file"
+        }
+      },
+      "id": "3",
+      "name": "Send request to Remove.bg AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        680,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/{{$env.CLOUDINARY_CLOUD_NAME}}/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{$node[\"Send request to Remove.bg AI\"].binary.data}}"
+            },
+            {
+              "name": "upload_preset",
+              "value": "snapcut_temp"
+            },
+            {
+              "name": "folder",
+              "value": "snapcut/results"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4",
+      "name": "Upload Transparent result to Cloudinary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        900,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "table": "uploads",
+        "columns": "status, result_url, cloudinary_result_id",
+        "where": "id = {{$node[\"Webhook Process Image Trigger\"].json[\"body\"][\"uploadId\"]}}",
+        "updateData": {
+          "status": "completed",
+          "result_url": "={{$node[\"Upload Transparent result to Cloudinary\"].json[\"secure_url\"]}}",
+          "cloudinary_result_id": "={{$node[\"Upload Transparent result to Cloudinary\"].json[\"public_id\"]}}"
+        }
+      },
+      "id": "5",
+      "name": "Update status in Supabase DB",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"completed\",\n  \"resultUrl\": \"{{$node[\"Upload Transparent result to Cloudinary\"].json[\"secure_url\"]}}\"\n}"
+      },
+      "id": "6",
+      "name": "Send Webhook response Node",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Process Image Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Request Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Request Payload": {
+      "main": [
+        [
+          {
+            "node": "Send request to Remove.bg AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send request to Remove.bg AI": {
+      "main": [
+        [
+          {
+            "node": "Upload Transparent result to Cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Transparent result to Cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Update status in Supabase DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update status in Supabase DB": {
+      "main": [
+        [
+          {
+            "node": "Send Webhook response Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
