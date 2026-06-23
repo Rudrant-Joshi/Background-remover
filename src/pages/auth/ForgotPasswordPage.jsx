@@ -13,8 +13,8 @@ export default function ForgotPasswordPage() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/settings',
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: window.location.origin + '/reset-password',
       })
       if (error) throw error
       toast.success('Password reset email sent! Please check your inbox.')

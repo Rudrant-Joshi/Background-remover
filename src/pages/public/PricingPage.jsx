@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { checkAndDecrementCredit } from '../../services/supabase.service'
 import { createOrder, loadRazorpay, openRazorpayCheckout } from '../../services/n8n.service'
-import { Check, Info } from 'lucide-react'
+import { Check, Info, Sparkles, Crown, Zap, ArrowRight } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
 export default function PricingPage() {
@@ -25,6 +25,8 @@ export default function PricingPage() {
       ],
       cta: 'Current Plan',
       isPopular: false,
+      icon: Zap,
+      gradient: 'from-slate-500 to-slate-600',
     },
     {
       id: 'pro_monthly',
@@ -41,6 +43,8 @@ export default function PricingPage() {
       ],
       cta: 'Upgrade to Pro',
       isPopular: true,
+      icon: Crown,
+      gradient: 'from-amber-500 to-amber-600',
     },
     {
       id: 'credits_pack_100',
@@ -56,6 +60,8 @@ export default function PricingPage() {
       ],
       cta: 'Buy Credits Pack',
       isPopular: false,
+      icon: Sparkles,
+      gradient: 'from-sky-500 to-cyan-500',
     },
   ]
 
@@ -117,69 +123,102 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="py-20 px-4 max-w-7xl mx-auto">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl sm:text-5xl font-extrabold font-heading mb-4 gradient-text-warm">
-          Affordable, Simple Pricing
-        </h1>
-        <p className="text-text-secondary max-w-xl mx-auto">
-          Start for free, upgrade as you grow. Choose between recurring subscriptions or simple bulk credits packs.
-        </p>
-      </div>
+    <div className="relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 grid-bg" />
+      <div className="orb orb-primary w-[500px] h-[500px] -top-40 left-1/3" />
+      <div className="orb orb-accent w-[400px] h-[400px] bottom-20 right-0" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-        {plans.map((plan) => (
-          <div 
-            key={plan.id}
-            className={`card p-8 flex flex-col justify-between relative ${
-              plan.isPopular ? 'border-primary shadow-glow bg-card' : 'border-card-border bg-card'
-            }`}
-          >
-            {plan.isPopular && (
-              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                Most Popular
-              </span>
-            )}
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-              <p className="text-xs text-text-muted mb-6">{plan.description}</p>
-              
-              <div className="flex items-baseline gap-1 mb-8">
-                <span className="text-4xl font-extrabold text-white">{plan.price}</span>
-                {plan.period && <span className="text-sm text-text-muted">{plan.period}</span>}
-              </div>
-
-              <div className="divider mb-8" />
-
-              <ul className="flex flex-col gap-4 text-sm text-text-secondary mb-8">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2.5">
-                    <Check className="h-4.5 w-4.5 text-success shrink-0" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              disabled={loadingPlan === plan.id}
-              onClick={() => handlePlanSelect(plan)}
-              className={`w-full py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-                plan.isPopular 
-                  ? 'btn-primary' 
-                  : 'bg-background-secondary border border-card-border text-white hover:bg-card'
-              }`}
-            >
-              {loadingPlan === plan.id ? 'Processing...' : plan.cta}
-            </button>
+      <div className="relative z-10 py-24 px-4 sm:px-6 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/5 text-xs text-primary-hover mb-6 font-medium">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Simple Pricing</span>
           </div>
-        ))}
-      </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading mb-6 leading-tight">
+            Affordable, <span className="gradient-text-warm">Simple</span> Pricing
+          </h1>
+          <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base">
+            Start for free, upgrade as you grow. Choose between recurring subscriptions or simple bulk credit packs.
+          </p>
+        </div>
 
-      {/* Tax/Refund Note */}
-      <div className="mt-12 text-center max-w-md mx-auto flex items-center gap-2 justify-center text-xs text-text-muted">
-        <Info className="h-4 w-4 shrink-0 text-primary" />
-        <span>Prices are in INR. Tax added during checkout. Refund policy applies to purchases within 7 days.</span>
+        {/* Plans Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          {plans.map((plan, idx) => {
+            const Icon = plan.icon
+            return (
+              <div 
+                key={plan.id}
+                className={`relative flex flex-col justify-between transition-all duration-300 animate-fade-in-up hover:scale-[1.03] ${
+                  plan.isPopular 
+                    ? 'card-highlight p-8 shadow-glow hover:shadow-glow-lg' 
+                    : 'card p-8 hover:shadow-card-hover hover:border-primary/20'
+                }`}
+                style={{ animationDelay: `${idx * 0.1}s`, opacity: 0, animationFillMode: 'forwards' }}
+              >
+                {plan.isPopular && (
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-primary text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-glow-sm">
+                    Most Popular
+                  </span>
+                )}
+                <div>
+                  {/* Plan icon */}
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${plan.gradient} w-fit mb-5 shadow-lg`}>
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-1.5">{plan.name}</h3>
+                  <p className="text-xs text-text-muted mb-6">{plan.description}</p>
+                  
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-4xl font-extrabold text-white">{plan.price}</span>
+                    {plan.period && <span className="text-sm text-text-muted">{plan.period}</span>}
+                  </div>
+
+                  <div className="divider mb-8" />
+
+                  <ul className="flex flex-col gap-4 text-sm text-text-secondary mb-8">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <div className="h-5 w-5 rounded-full bg-success/10 border border-success/20 flex items-center justify-center flex-shrink-0">
+                          <Check className="h-3 w-3 text-success" />
+                        </div>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <button
+                  disabled={loadingPlan === plan.id}
+                  onClick={() => handlePlanSelect(plan)}
+                  className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-2 group ${
+                    plan.isPopular 
+                      ? 'btn-primary' 
+                      : 'bg-background-tertiary border text-white hover:bg-card-solid hover:shadow-glow-sm'
+                  }`}
+                  style={!plan.isPopular ? { borderColor: 'var(--card-border)' } : {}}
+                  id={`plan-select-${plan.id}`}
+                >
+                  {loadingPlan === plan.id ? 'Processing...' : (
+                    <>
+                      {plan.cta}
+                      {plan.isPopular && <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}
+                    </>
+                  )}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Tax/Refund Note */}
+        <div className="mt-12 text-center max-w-md mx-auto flex items-center gap-2.5 justify-center text-xs text-text-muted">
+          <Info className="h-4 w-4 shrink-0 text-primary" />
+          <span>Prices are in INR. Tax added during checkout. Refund policy applies to purchases within 7 days.</span>
+        </div>
       </div>
     </div>
   )

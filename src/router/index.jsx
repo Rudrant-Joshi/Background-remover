@@ -11,7 +11,6 @@ import AuthLayout from '../components/layout/AuthLayout'
 import LandingPage from '../pages/public/LandingPage'
 import FeaturesPage from '../pages/public/FeaturesPage'
 import PricingPage from '../pages/public/PricingPage'
-import ApiDocsPage from '../pages/public/ApiDocsPage'
 import AboutPage from '../pages/public/AboutPage'
 import ContactPage from '../pages/public/ContactPage'
 import PrivacyPage from '../pages/public/PrivacyPage'
@@ -22,6 +21,7 @@ import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
 import VerifyEmailPage from '../pages/auth/VerifyEmailPage'
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage'
 
 // User Pages
 import DashboardPage from '../pages/user/DashboardPage'
@@ -31,7 +31,6 @@ import DownloadsPage from '../pages/user/DownloadsPage'
 import BillingPage from '../pages/user/BillingPage'
 import CreditsPage from '../pages/user/CreditsPage'
 import SettingsPage from '../pages/user/SettingsPage'
-import ApiKeysPage from '../pages/user/ApiKeysPage'
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/AdminDashboard'
@@ -71,7 +70,6 @@ export default function AppRouter() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/api-docs" element={<ApiDocsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
@@ -83,6 +81,7 @@ export default function AppRouter() {
         <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
         <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
         <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
+        <Route path="/reset-password" element={<GuestRoute><ResetPasswordPage /></GuestRoute>} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Route>
 
@@ -95,7 +94,6 @@ export default function AppRouter() {
         <Route path="/billing" element={<BillingPage />} />
         <Route path="/credits" element={<CreditsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/api-keys" element={<ApiKeysPage />} />
       </Route>
 
       {/* Admin Routes */}

@@ -11,7 +11,7 @@ export default function AdminDashboard() {
 
   const adminStats = [
     { label: 'Total Registered Users', value: stats?.total_users || 0, icon: Users, color: 'text-primary' },
-    { label: 'Uploads (Today)', value: stats?.uploads_today || 0, icon: FileImage, color: 'text-indigo-400' },
+    { label: 'Uploads (Today)', value: stats?.uploads_today || 0, icon: FileImage, color: 'text-primary' },
     { label: 'Total Backgrounds Removed', value: stats?.total_completed || 0, icon: ShieldCheck, color: 'text-success' },
     { label: 'Total Revenue (Authorized)', value: stats ? `₹${(stats.total_revenue / 100).toFixed(0)}` : '₹0', icon: Wallet, color: 'text-emerald-400' },
   ]
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
         {adminStats.map((stat, idx) => {
           const Icon = stat.icon
           return (
-            <div key={idx} className="card p-6 flex flex-col justify-between gap-4">
+            <div key={idx} className="card p-6 flex flex-col justify-between gap-4 hover:scale-[1.03] hover:shadow-card-hover hover:border-primary/20 transition-all duration-300 cursor-default">
               <div className="flex justify-between items-start">
                 <span className="text-xs text-text-muted font-medium">{stat.label}</span>
                 <Icon className={`h-5 w-5 ${stat.color}`} />
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
             <p className="text-xs text-text-muted">System-wide active background isolation processor configuration.</p>
           </div>
           <div className="flex items-center gap-3 mt-4">
-            <div className="p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-xs font-semibold">
+            <div className="p-2 rounded bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-semibold">
               Remove.bg API (Default)
             </div>
             <span className="text-xs text-text-muted">Avg Processing Duration: 4.2s</span>

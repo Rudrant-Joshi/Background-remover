@@ -2,22 +2,34 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'react-hot-toast'
-import { Mail, Lock, UserPlus, User } from 'lucide-react'
+import { Mail, Lock, UserPlus, User, ArrowRight } from 'lucide-react'
 
 export default function RegisterPage() {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
+  const [confirmPassword, setConfirmPassword] = React.useState('')
   const [fullName, setFullName] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const navigate = useNavigate()
 
   const handleRegister = async (e) => {
     e.preventDefault()
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match.')
+      return
+    }
+
     setLoading(true)
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: {
           data: {
@@ -28,12 +40,13 @@ export default function RegisterPage() {
       
       if (error) throw error
 
-      // Automatically sign in after signup
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-      if (signInError) throw signInError
-
-      toast.success('Registration successful! Welcome to SnapCut.')
-      navigate('/dashboard')
+      if (data?.session) {
+        toast.success('Registration successful! Welcome to SnapCut.')
+        navigate('/dashboard')
+      } else {
+        toast.success('Registration successful! Please check your inbox for a verification email.')
+        navigate('/verify-email')
+      }
     } catch (err) {
       toast.error(err.message || 'Registration failed.')
     } finally {
@@ -42,53 +55,72 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-7">
       <div>
-        <h2 className="text-xl font-bold text-white text-center">Get Started Free</h2>
-        <p className="text-xs text-text-muted text-center mt-1">Instant high-res background removal</p>
+        <h2 className="text-2xl font-extrabold text-white text-center font-heading">Get Started Free</h2>
+        <p className="text-sm text-text-muted text-center mt-2">Instant high-res background removal</p>
       </div>
 
-      <form onSubmit={handleRegister} className="flex flex-col gap-4">
+      <form onSubmit={handleRegister} className="flex flex-col gap-5">
         <div>
-          <label className="block text-xs font-semibold text-text-secondary uppercase mb-2">Full Name</label>
+          <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5" htmlFor="register-name">Full Name</label>
           <div className="relative">
-            <User className="absolute left-3 top-3.5 h-4 w-4 text-text-muted" />
+            <User className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
             <input 
               type="text" 
               required 
+              id="register-name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="input-field pl-10" 
+              className="input-field pl-11" 
               placeholder="John Doe" 
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-text-secondary uppercase mb-2">Email</label>
+          <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5" htmlFor="register-email">Email</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-3.5 h-4 w-4 text-text-muted" />
+            <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
             <input 
               type="email" 
               required 
+              id="register-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="input-field pl-10" 
+              className="input-field pl-11" 
               placeholder="john@example.com" 
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-text-secondary uppercase mb-2">Password</label>
+          <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5" htmlFor="register-password">Password</label>
           <div className="relative">
-            <Lock className="absolute left-3 top-3.5 h-4 w-4 text-text-muted" />
+            <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
             <input 
               type="password" 
               required 
+              id="register-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-field pl-10" 
+              className="input-field pl-11" 
+              placeholder="••••••••" 
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2.5" htmlFor="register-confirm-password">Confirm Password</label>
+          <div className="relative">
+            <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-text-muted" />
+            <input 
+              type="password" 
+              required 
+              id="register-confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="input-field pl-11" 
               placeholder="••••••••" 
             />
           </div>
@@ -97,23 +129,26 @@ export default function RegisterPage() {
         <button 
           type="submit" 
           disabled={loading}
-          className="btn-primary w-full mt-2 cursor-pointer flex items-center justify-center gap-2"
+          className="btn-primary w-full mt-2 cursor-pointer flex items-center justify-center gap-2 group"
+          id="register-submit"
         >
           {loading ? 'Creating...' : (
             <>
               <UserPlus className="h-4.5 w-4.5" />
               Create Free Account
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </>
           )}
         </button>
       </form>
 
-      <p className="text-xs text-text-muted text-center">
+      <p className="text-sm text-text-muted text-center">
         Already have an account?{' '}
-        <Link to="/login" className="text-primary hover:text-primary-hover font-semibold">
+        <Link to="/login" className="text-primary hover:text-primary-hover font-semibold transition-colors">
           Login instead
         </Link>
       </p>
     </div>
   )
 }
+

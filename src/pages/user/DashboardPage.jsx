@@ -93,7 +93,7 @@ export default function DashboardPage() {
       value: uploads ? uploads.length : '...',
       detail: 'Recent background removals',
       icon: Clock,
-      color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+      color: 'text-primary bg-primary/10 border-primary/20',
     },
     {
       label: 'Active Plan',
@@ -123,7 +123,7 @@ export default function DashboardPage() {
         {stats.map((stat, idx) => {
           const Icon = stat.icon
           return (
-            <div key={idx} className="card p-6 flex items-start gap-4">
+            <div key={idx} className="card p-6 flex items-start gap-4 hover:scale-[1.03] hover:shadow-card-hover hover:border-primary/20 transition-all duration-300 cursor-default">
               <div className={`p-3 rounded-lg border ${stat.color} shrink-0`}>
                 <Icon className="h-6 w-6" />
               </div>

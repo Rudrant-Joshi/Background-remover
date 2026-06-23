@@ -450,7 +450,7 @@ export default function UploadPage() {
         ) : (
           <div 
             {...getRootProps()} 
-            className={`upload-zone w-full p-16 flex flex-col items-center justify-center gap-4 text-center select-none ${
+            className={`upload-zone w-full p-16 flex flex-col items-center justify-center gap-4 text-center select-none hover:scale-[1.01] hover:shadow-glow-sm transition-all duration-300 ${
               isDragActive ? 'active' : ''
             }`}
           >

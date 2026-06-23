@@ -19,6 +19,17 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
+-- Helper function to check admin status bypassing RLS recursion
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
 CREATE POLICY "Users can view own profile" ON public.profiles
   FOR SELECT USING (auth.uid() = id);
 
@@ -26,9 +37,7 @@ CREATE POLICY "Users can update own profile" ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
 
 CREATE POLICY "Admins can view all profiles" ON public.profiles
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR SELECT USING (public.is_admin());
 
 -- Trigger: auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -117,9 +126,7 @@ CREATE POLICY "Service role can update uploads" ON public.uploads
   FOR UPDATE USING (true);
 
 CREATE POLICY "Admins can view all uploads" ON public.uploads
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR SELECT USING (public.is_admin());
 
 -- Index for performance
 CREATE INDEX idx_uploads_user_id ON public.uploads(user_id);
@@ -177,9 +184,7 @@ CREATE POLICY "Users can view own transactions" ON public.transactions
   FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Admins can view all transactions" ON public.transactions
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR SELECT USING (public.is_admin());
 
 CREATE POLICY "Service role can manage transactions" ON public.transactions
   FOR ALL USING (true);
@@ -224,9 +229,7 @@ CREATE TABLE IF NOT EXISTS public.logs (
 ALTER TABLE public.logs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Admins can view all logs" ON public.logs
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR SELECT USING (public.is_admin());
 
 CREATE POLICY "Service role can insert logs" ON public.logs
   FOR INSERT WITH CHECK (true);

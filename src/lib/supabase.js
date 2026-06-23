@@ -94,7 +94,15 @@ const mockAuth = {
     }
     users.push(newUser)
     localStorage.setItem('snapcut_mock_users', JSON.stringify(users))
-    return { data: { user: newUser }, error: null }
+
+    // Automatically sign in the user for mock mode sandbox to make testing easier
+    localStorage.setItem('snapcut_mock_user', JSON.stringify(newUser))
+    this.session = { user: newUser, access_token: 'mock-jwt-token' }
+    setTimeout(() => {
+      this.notifyListeners('SIGNED_IN', this.session)
+    }, 50)
+
+    return { data: { user: newUser, session: this.session }, error: null }
   },
 
   async signOut() {
@@ -105,11 +113,57 @@ const mockAuth = {
   },
 
   async resetPasswordForEmail(email) {
+    if (!email) {
+      return { data: null, error: new Error('Email is required') }
+    }
+    const users = JSON.parse(localStorage.getItem('snapcut_mock_users') || '[]')
+    const match = users.find(u => u.email === email)
+    if (!match) {
+      return { data: null, error: new Error('Authentication failed: user does not exist with this email.') }
+    }
+    sessionStorage.setItem('snapcut_mock_reset_email', email)
+    alert(`[Sandbox Mode Reset Link]\nWe've simulated sending a recovery email to ${email}.\n\nClick OK to be redirected to the Reset Password page.`)
+    window.location.href = '/reset-password'
     return { data: {}, error: null }
   },
 
   async updateUser({ password }) {
-    return { data: {}, error: null }
+    if (!password) {
+      return { data: null, error: new Error('Password is required') }
+    }
+    
+    // Find who is updating the password
+    let email = null
+    const storedUser = localStorage.getItem('snapcut_mock_user')
+    if (storedUser) {
+      email = JSON.parse(storedUser).email
+    } else {
+      email = sessionStorage.getItem('snapcut_mock_reset_email')
+    }
+
+    if (!email) {
+      return { data: null, error: new Error('No user session or reset request found to update password.') }
+    }
+
+    const users = JSON.parse(localStorage.getItem('snapcut_mock_users') || '[]')
+    const userIndex = users.findIndex(u => u.email === email)
+    if (userIndex === -1) {
+      return { data: null, error: new Error('User not found.') }
+    }
+
+    // Update password
+    users[userIndex].password = password
+    localStorage.setItem('snapcut_mock_users', JSON.stringify(users))
+
+    // If logged in, update the session user
+    if (storedUser) {
+      localStorage.setItem('snapcut_mock_user', JSON.stringify(users[userIndex]))
+      this.session = { user: users[userIndex], access_token: 'mock-jwt-token' }
+    } else {
+      sessionStorage.removeItem('snapcut_mock_reset_email')
+    }
+
+    return { data: { user: users[userIndex] }, error: null }
   },
 
   async signInWithOAuth({ provider, options }) {
