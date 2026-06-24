@@ -48,7 +48,7 @@ export default function DashboardLayout() {
       <aside className="hidden lg:flex flex-col w-64 border-r p-4 justify-between sticky top-0 h-screen" style={{ borderColor: 'var(--card-border)', background: 'var(--bg-secondary)' }}>
         <div className="flex flex-col gap-6">
           <Link to="/" className="flex items-center gap-2.5 font-bold text-xl px-2 text-white group">
-            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-8.5 w-8.5 group-hover:scale-105 transition-transform duration-300" />
+            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-8 w-8 group-hover:scale-105 transition-transform duration-300" />
             <span className="font-heading">SnapCut <span className="gradient-text">AI</span></span>
           </Link>
 
@@ -150,7 +150,7 @@ export default function DashboardLayout() {
         {/* Mobile Header */}
         <header className="lg:hidden h-16 border-b px-4 flex items-center justify-between sticky top-0 z-30 backdrop-blur-xl" style={{ borderColor: 'var(--card-border)', background: 'rgba(23, 23, 23, 0.85)' }}>
           <Link to="/" className="flex items-center gap-2 font-bold text-lg text-white">
-            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-7 w-7" />
+            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-6 w-6" />
             <span className="font-heading">SnapCut</span>
           </Link>
           <div className="flex items-center gap-3">

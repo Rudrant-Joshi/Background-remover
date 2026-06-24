@@ -22,7 +22,7 @@ export default function PublicLayout() {
       <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-xl border-b shadow-lg shadow-black/10' : 'bg-transparent'}`} style={{ borderColor: scrolled ? 'var(--card-border)' : 'transparent' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 font-bold text-xl tracking-tight text-white group">
-            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-8.5 w-8.5 group-hover:scale-105 transition-transform duration-300" />
+            <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-8 w-8 group-hover:scale-105 transition-transform duration-300" />
             <span className="font-heading">SnapCut <span className="gradient-text">AI</span></span>
           </Link>
 
@@ -128,7 +128,7 @@ export default function PublicLayout() {
             {/* Brand Column */}
             <div className="col-span-2 md:col-span-4 flex flex-col gap-5">
               <div className="flex items-center gap-2.5 font-bold text-lg text-white">
-                <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-7 w-7" />
+                <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-6 w-6" />
                 <span className="font-heading">SnapCut <span className="gradient-text">AI</span></span>
               </div>
               <p className="text-sm text-text-muted leading-relaxed max-w-xs">
