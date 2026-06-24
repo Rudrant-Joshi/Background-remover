@@ -123,14 +123,14 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <button
             onClick={handleLogout}
-            className="btn-secondary flex items-center gap-2 py-2 px-4 text-xs font-semibold border-error/20 hover:bg-error/10 hover:text-error hover:border-error/30 transition-all duration-200"
+            className="btn-secondary flex-1 md:flex-none flex items-center justify-center gap-2 py-2.5 px-4 md:py-3 md:px-6 text-xs md:text-sm border-error/20 hover:bg-error/10 hover:text-error hover:border-error/30 transition-all duration-200"
             id="dashboard-logout-button"
           >
             <LogOut className="h-4 w-4" />
             Logout
           </button>
-          <Link to="/upload" className="btn-primary flex items-center gap-2">
-            <UploadCloud className="h-4.5 w-4.5" />
+          <Link to="/upload" className="btn-primary flex-1 md:flex-none flex items-center justify-center gap-2 py-2.5 px-4 md:py-3.5 md:px-7 text-xs md:text-sm">
+            <UploadCloud className="h-4 w-4" />
             Remove Background
           </Link>
         </div>

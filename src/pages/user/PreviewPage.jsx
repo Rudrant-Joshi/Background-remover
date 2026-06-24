@@ -73,7 +73,7 @@ export default function PreviewPage() {
         <Link to="/upload" className="text-xs text-text-secondary hover:text-white flex items-center gap-2 font-medium">
           <ArrowLeft className="h-4 w-4" /> Upload Workspace
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <button 
             onClick={() => setViewMode('split')}
             className={`py-1.5 px-3 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors border ${

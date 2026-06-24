@@ -32,7 +32,7 @@ export default function TermsPage() {
           <div>
             <h2 className="text-lg font-bold text-white mb-3">2. Credit Usage & Renewal</h2>
             <p className="text-text-muted leading-relaxed text-sm">
-              Free daily credits reset at 00:00 UTC. Purchased credit packs have no expiration date. Pro subscription credits are unlimited for regular user operations. Automated scraping using browser triggers is forbidden on dashboard components; use the B2B API endpoints instead.
+              Free tier accounts receive 5 free lifetime credits. Purchased credit packs have no expiration date. Pro subscription credits are unlimited for regular user operations. Automated scraping using browser triggers is forbidden on dashboard components; use the B2B API endpoints instead.
             </p>
           </div>
 

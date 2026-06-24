@@ -50,7 +50,7 @@ export default function BillingPage() {
               <p className="text-xs text-text-muted">
                 {credits?.plan === 'pro' 
                   ? 'Unlimited high-resolution downloads, prior queue priority access.' 
-                  : 'Daily quota limited to 5 image removals. Upgrades activate instantly.'}
+                  : 'Free tier is limited to 5 lifetime credits. Upgrades activate instantly.'}
               </p>
             </div>
             <div className="p-3 rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -72,12 +72,12 @@ export default function BillingPage() {
         <div className="card p-6 bg-card border-card-border flex flex-col justify-between gap-6">
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1">
-              <span className="text-xs text-text-muted font-medium">Credits Usage Daily Limit</span>
+              <span className="text-xs text-text-muted font-medium">Credits Remaining</span>
               <h3 className="text-2xl font-extrabold text-white mt-1.5">
                 {credits ? (credits.plan === 'pro' ? 'Unlimited' : (credits.total_credits - credits.used_credits)) : '...'}
               </h3>
               <p className="text-xs text-text-muted mt-1">
-                Daily limits reset at 00:00 UTC. Unused plan credits do not roll over.
+                Purchase credit packs or upgrade to Pro for unlimited image removals.
               </p>
             </div>
           </div>

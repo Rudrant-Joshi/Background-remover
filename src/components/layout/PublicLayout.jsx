@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { LogIn, Menu, X, Scissors, ArrowRight } from 'lucide-react'
 
@@ -8,6 +8,7 @@ export default function PublicLayout() {
   const [scrolled, setScrolled] = React.useState(false)
   const { user, signOut } = useAuthStore()
   const navigate = useNavigate()
+  const location = useLocation()
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -58,14 +59,25 @@ export default function PublicLayout() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-text-muted hover:text-white transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            id="mobile-menu-toggle"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            {user && location.pathname === '/' && (
+              <button
+                onClick={() => { signOut(); navigate('/'); }}
+                className="btn-secondary py-1.5 px-3 text-xs font-semibold"
+                id="mobile-home-logout"
+              >
+                Logout
+              </button>
+            )}
+            <button 
+              className="p-2 text-text-muted hover:text-white transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              id="mobile-menu-toggle"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </header>
 

@@ -18,7 +18,7 @@ export default function PricingPage() {
       price: '₹0',
       description: 'Ideal for casual editing, cropping, and personal projects.',
       features: [
-        '5 free downloads daily',
+        '5 free lifetime downloads',
         'Standard resolution previews',
         'Auto-delete after 24 hours',
         'Basic community support',
