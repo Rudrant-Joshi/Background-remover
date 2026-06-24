@@ -43,19 +43,9 @@ export async function checkAndDecrementCredit(userId) {
   // First check current credits
   const credits = await getCredits(userId)
 
-  // Reset daily credits if date has changed
-  const today = new Date().toISOString().split('T')[0]
-  if (credits.reset_date !== today && credits.plan === 'free') {
-    await supabase
-      .from('credits')
-      .update({ used_credits: 0, reset_date: today })
-      .eq('user_id', userId)
-    credits.used_credits = 0
-  }
-
   // Check if user has available credits
   if (credits.plan === 'free' && credits.used_credits >= credits.total_credits) {
-    throw new Error('Daily credit limit reached. Upgrade to Pro for unlimited processing.')
+    throw new Error('All 5 free credits have been used. Upgrade to Pro for unlimited processing.')
   }
 
   if (credits.plan === 'pro') return true // Unlimited

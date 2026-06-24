@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'react-hot-toast'
 import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react'
@@ -9,6 +9,9 @@ export default function LoginPage() {
   const [password, setPassword] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const from = location.state?.from || '/dashboard'
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -18,7 +21,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
       if (error) throw error
       toast.success('Successfully logged in!')
-      navigate('/dashboard')
+      navigate(from, { replace: true })
     } catch (err) {
       toast.error(err.message || 'Authentication failed.')
     } finally {

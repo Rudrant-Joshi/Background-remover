@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { toast } from 'react-hot-toast'
 import { Mail, Lock, UserPlus, User, ArrowRight } from 'lucide-react'
@@ -11,6 +11,9 @@ export default function RegisterPage() {
   const [fullName, setFullName] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const from = location.state?.from || '/dashboard'
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -42,7 +45,7 @@ export default function RegisterPage() {
 
       if (data?.session) {
         toast.success('Registration successful! Welcome to SnapCut.')
-        navigate('/dashboard')
+        navigate(from, { replace: true })
       } else {
         toast.success('Registration successful! Please check your inbox for a verification email.')
         navigate('/verify-email')

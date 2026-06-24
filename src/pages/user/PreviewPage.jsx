@@ -8,20 +8,20 @@ import { toast } from 'react-hot-toast'
 
 export default function PreviewPage() {
   const { id } = useParams()
-  const [viewMode, setViewMode] = React.useState('split') // 'split' | 'result' | 'original'
+  const [viewMode, setViewMode] = React.useState('result') // 'split' | 'result' | 'original'
 
   const { data: upload, isLoading, error } = useQuery({
     queryKey: ['upload', id],
     queryFn: async () => {
       try {
-        const localRecord = await getLocalUploadById(id)
-        if (localRecord && (localRecord.result_url || localRecord.original_url)) {
-          return localRecord
+        const remoteRecord = await getUploadById(id)
+        if (remoteRecord && (remoteRecord.result_url || remoteRecord.original_url)) {
+          return remoteRecord
         }
       } catch (err) {
-        console.warn('Failed to fetch from local database:', err)
+        console.warn('Failed to fetch from Supabase database, trying local fallback:', err)
       }
-      return await getUploadById(id)
+      return await getLocalUploadById(id)
     },
     enabled: !!id,
   })

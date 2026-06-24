@@ -403,7 +403,7 @@ export default function UploadPage() {
                     <div className="flex flex-col gap-0.5">
                       <span className="text-xs font-semibold text-white font-heading">Credit consumption</span>
                       <p className="text-[11px] text-text-secondary leading-normal">
-                        This operation consumes 1 credit. Free users have a daily allowance.
+                        This operation consumes 1 credit. Free users receive 5 lifetime credits.
                       </p>
                     </div>
                   </div>

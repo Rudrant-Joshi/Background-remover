@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { useQuery } from '@tanstack/react-query'
 import { getUploads, getCredits, getSubscription } from '../../services/supabase.service'
@@ -13,11 +13,19 @@ import {
   AlertCircle, 
   ChevronRight,
   TrendingUp,
-  CreditCard
+  CreditCard,
+  LogOut,
+  Eye
 } from 'lucide-react'
 
 export default function DashboardPage() {
-  const { user } = useAuthStore()
+  const { user, signOut } = useAuthStore()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/')
+  }
 
   // Fetch recent uploads (7 days limit, merged with local storage)
   const { data: uploads, isLoading: uploadsLoading } = useQuery({
@@ -44,15 +52,15 @@ export default function DashboardPage() {
         mergedMap.set(record.id, record)
       })
 
-      // Overlay local uploads, favoring local Base64 URLs to prevent URL expiration issues
+      // Overlay local uploads, favoring remote database URLs if they exist
       localUploads.forEach(record => {
         const existing = mergedMap.get(record.id)
         if (existing) {
           mergedMap.set(record.id, {
             ...existing,
-            result_url: record.result_url && record.result_url.startsWith('data:') ? record.result_url : existing.result_url,
-            original_url: record.original_url && record.original_url.startsWith('data:') ? record.original_url : existing.original_url,
-            status: record.status || existing.status,
+            result_url: existing.result_url || record.result_url,
+            original_url: existing.original_url || record.original_url,
+            status: existing.status || record.status,
           })
         } else {
           mergedMap.set(record.id, record)
@@ -84,7 +92,7 @@ export default function DashboardPage() {
     {
       label: 'Credits Remaining',
       value: credits ? (credits.plan === 'pro' ? 'Unlimited' : (credits.total_credits - credits.used_credits)) : '...',
-      detail: credits?.plan === 'pro' ? 'Pro Plan active' : `${credits?.used_credits || 0} / ${credits?.total_credits || 5} daily used`,
+      detail: credits?.plan === 'pro' ? 'Pro Plan active' : `${credits?.used_credits || 0} / ${credits?.total_credits || 5} credits used`,
       icon: Sparkles,
       color: 'text-primary bg-primary/10 border-primary/20',
     },
@@ -112,10 +120,20 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-extrabold font-heading text-white">Overview Workspace</h1>
           <p className="text-sm text-text-secondary mt-1">Manage background removals, check credits, and view recent history.</p>
         </div>
-        <Link to="/upload" className="btn-primary flex items-center gap-2">
-          <UploadCloud className="h-4.5 w-4.5" />
-          Remove Background
-        </Link>
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <button
+            onClick={handleLogout}
+            className="btn-secondary flex items-center gap-2 py-2 px-4 text-xs font-semibold border-error/20 hover:bg-error/10 hover:text-error hover:border-error/30 transition-all duration-200"
+            id="dashboard-logout-button"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
+          <Link to="/upload" className="btn-primary flex items-center gap-2">
+            <UploadCloud className="h-4.5 w-4.5" />
+            Remove Background
+          </Link>
+        </div>
       </div>
 
       {/* Grid Stats */}
@@ -179,16 +197,25 @@ export default function DashboardPage() {
                 {uploads.slice(0, 5).map((upload) => (
                   <tr key={upload.id} className="table-row">
                     <td className="py-3">
-                      <div className="h-10 w-10 rounded overflow-hidden border border-card-border bg-background-secondary flex items-center justify-center relative">
-                        {upload.status === 'completed' ? (
-                          <img src={upload.result_url} className="h-full w-full object-cover" alt="cutout" />
-                        ) : (
-                          <img src={upload.original_url} className="h-full w-full object-cover opacity-50" alt="original" />
-                        )}
-                        {upload.status === 'failed' && (
-                          <div className="absolute inset-0 bg-error/20 flex items-center justify-center text-[10px] text-error font-bold">ERR</div>
-                        )}
-                      </div>
+                      {upload.status === 'completed' ? (
+                        <Link 
+                          to={`/preview/${upload.id}`}
+                          className="relative h-11 w-11 rounded-lg overflow-hidden border border-card-border flex items-center justify-center group cursor-pointer block"
+                          style={{ backgroundImage: "radial-gradient(circle, #222222 10%, transparent 11%)", backgroundSize: "6px 6px", backgroundColor: "#0A0A0A" }}
+                          title="View Result"
+                        >
+                          <img src={upload.result_url} className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110" alt="cutout" />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                            <Eye className="h-4.5 w-4.5 text-white" />
+                          </div>
+                        </Link>
+                      ) : (
+                        <div className="h-11 w-11 rounded-lg overflow-hidden border border-card-border bg-background-secondary flex items-center justify-center relative">
+                          <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">
+                            {upload.status === 'failed' ? 'Failed' : 'Processing'}
+                          </span>
+                        </div>
+                      )}
                     </td>
                     <td className="py-3 font-medium text-white max-w-[200px] truncate">{upload.original_filename || 'image.png'}</td>
                     <td className="py-3 text-text-muted">{formatBytes(upload.file_size)}</td>

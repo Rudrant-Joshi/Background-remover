@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 
 // Layouts
@@ -42,8 +42,9 @@ import AdminPayments from '../pages/admin/AdminPayments'
 // Guards
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuthStore()
+  const location = useLocation()
   if (loading) return null
-  if (!user) return <Navigate to="/login" replace />
+  if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />
   return children
 }
 

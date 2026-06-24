@@ -62,7 +62,7 @@ export default function DashboardLayout() {
                 {credits ? (credits.plan === 'pro' ? '∞' : (credits.total_credits - credits.used_credits)) : '...'}
               </span>
               <span className="text-xs text-text-muted">
-                {credits?.plan === 'pro' ? 'unlimited' : `/ ${credits?.total_credits || 5} daily`}
+                {credits?.plan === 'pro' ? 'unlimited' : `/ ${credits?.total_credits || 5} credits`}
               </span>
             </div>
             <div className="w-full h-1.5 rounded-full overflow-hidden mt-1" style={{ background: '#1a1a1a' }}>
@@ -134,15 +134,16 @@ export default function DashboardLayout() {
                 <span className="text-[10px] text-text-muted capitalize">{credits?.plan || 'Free'} Plan</span>
               </div>
             </div>
-            <button 
-              onClick={handleLogout}
-              className="p-1.5 text-text-muted hover:text-error rounded-lg transition-colors"
-              title="Logout"
-              id="sidebar-logout"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
           </div>
+
+          <button 
+            onClick={handleLogout}
+            className="btn-secondary w-full py-2.5 flex items-center justify-center gap-2 text-xs font-semibold border-error/20 hover:bg-error/10 hover:text-error hover:border-error/30 transition-all duration-200 mt-2"
+            id="sidebar-logout-button"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout Account
+          </button>
         </div>
       </aside>
 
