@@ -332,7 +332,7 @@ export default function UploadPage() {
             <div className="divider" />
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-center w-full">
               <div className="flex flex-col">
-                <span className="text-sm font-bold text-white">Prisinquality PNG ready</span>
+                <span className="text-sm font-bold text-white">Pristine quality PNG ready</span>
                 <span className="text-xs text-text-muted mt-0.5">Transparent background, self-contained download</span>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">

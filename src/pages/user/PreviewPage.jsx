@@ -142,7 +142,7 @@ export default function PreviewPage() {
       {/* Export Action Card */}
       <div className="card p-6 bg-background-secondary border-card-border flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex flex-col">
-          <span className="text-sm font-bold text-white">Prisinquality PNG ready</span>
+          <span className="text-sm font-bold text-white">Pristine quality PNG ready</span>
           <span className="text-xs text-text-muted mt-0.5">Transparent background, export up to 5000x5000px</span>
         </div>
 

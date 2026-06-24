@@ -1,5 +1,5 @@
 import React from 'react'
-import { Shield, Heart, Server, Sparkles, Users, Globe } from 'lucide-react'
+import { Shield, Palette, Server, Sparkles, Users, Globe } from 'lucide-react'
 
 export default function AboutPage() {
   return (
@@ -57,7 +57,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: Shield, title: 'Privacy First', desc: 'We never sell your photos. Everything uploaded is deleted automatically within 24 hours.', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/15' },
-              { icon: Heart, title: 'Design Excellence', desc: 'We believe in simple, clean, dark-mode design systems that place user images front-and-center.', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/15' },
+              { icon: Palette, title: 'Design Excellence', desc: 'We believe in simple, clean, dark-mode design systems that place user images front-and-center.', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/15' },
               { icon: Server, title: 'Scalable Infra', desc: 'Our workflow is hosted on high-performance serverless runners to ensure maximum uptime.', color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/15' },
             ].map((item, idx) => {
               const Icon = item.icon

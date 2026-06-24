@@ -172,8 +172,8 @@ export default function PublicLayout() {
           {/* Bottom bar */}
           <div className="mt-14 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted" style={{ borderTop: '1px solid var(--divider)' }}>
             <span>&copy; {new Date().getFullYear()} SnapCut AI. All rights reserved.</span>
-            <span className="flex items-center gap-1.5">
-              Made with <span className="text-error">&hearts;</span> in India
+            <span>
+              Designed and engineered in India
             </span>
           </div>
         </div>
