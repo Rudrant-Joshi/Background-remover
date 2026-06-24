@@ -29,15 +29,18 @@ export default function ContactPage() {
           <p className="text-text-muted max-w-lg mx-auto text-sm sm:text-base">
             Have questions about pricing, bulk API usage, or enterprise deployments? Our team is ready to help.
           </p>
+          <p className="text-xs text-primary/70 mt-3 font-medium tracking-wide">
+            This website is made by Rudran Joshi
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Contact Info */}
           <div className="md:col-span-5 flex flex-col gap-6">
             {[
-              { icon: Mail, label: 'Email Us', value: 'support@snapcut.ai', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/15' },
-              { icon: Phone, label: 'Call Us', value: '+91 98765 43210', color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/15' },
-              { icon: MapPin, label: 'Visit Us', value: 'Bangalore, Karnataka, India', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/15' },
+              { icon: Mail, label: 'Email Us', value: 'rudrant.joshi@gmail.com', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/15' },
+              { icon: Phone, label: 'Call Us', value: '+91 70410 24680', color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/15' },
+              { icon: MapPin, label: 'Visit Us', value: 'Ahmedabad, Gujarat, India', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/15' },
             ].map((item, idx) => {
               const Icon = item.icon
               return (
