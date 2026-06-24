@@ -85,6 +85,50 @@ export default function UploadPage() {
     restoreUploadState()
   }, [user?.id])
 
+  React.useEffect(() => {
+    const handlePaste = (e) => {
+      if (isUploading || isProcessing) return
+
+      const items = e.clipboardData?.items
+      if (!items) return
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i]
+        if (item.type.indexOf('image') !== -1) {
+          const file = item.getAsFile()
+          if (file) {
+            const validation = validateImageFile(file)
+            if (!validation.valid) {
+              toast.error(validation.error)
+              return
+            }
+
+            if (previewUrl && !previewUrl.startsWith('data:')) {
+              URL.revokeObjectURL(previewUrl)
+            }
+
+            const fileName = file.name || `pasted_image_${Date.now()}.png`
+            const pastedFile = new File([file], fileName, { type: file.type })
+
+            setSelectedFile(pastedFile)
+            setPreviewUrl(URL.createObjectURL(pastedFile))
+            setResultUrl(null)
+            setError(null)
+            toast.success('Image pasted from clipboard!')
+            e.preventDefault()
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener('paste', handlePaste)
+    return () => {
+      window.removeEventListener('paste', handlePaste)
+    }
+  }, [isUploading, isProcessing, previewUrl])
+
+
   const handleDownload = async () => {
     if (!resultUrl) return
     try {
@@ -460,7 +504,7 @@ export default function UploadPage() {
             </div>
             <div>
               <p className="text-base font-semibold text-white">Drag & drop your image here</p>
-              <p className="text-xs text-text-muted mt-1.5">or click to browse files on your device</p>
+              <p className="text-xs text-text-muted mt-1.5">or click to browse, or paste directly (Ctrl + V)</p>
             </div>
             <div className="divider my-2 max-w-[200px]" />
             <p className="text-[10px] text-text-muted uppercase font-bold tracking-wider">
