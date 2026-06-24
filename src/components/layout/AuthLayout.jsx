@@ -12,9 +12,7 @@ export default function AuthLayout() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10">
         <Link to="/" className="flex justify-center items-center gap-2.5 font-bold text-2xl text-white group">
-          <span className="p-2.5 rounded-xl bg-gradient-primary shadow-glow-sm group-hover:scale-105 transition-transform duration-300">
-            <Scissors className="h-6 w-6 text-white" />
-          </span>
+          <img src="/favicon.svg" alt="SnapCut AI Logo" className="h-10 w-10 group-hover:scale-105 transition-transform duration-300" />
           <span className="font-heading">SnapCut <span className="gradient-text">AI</span></span>
         </Link>
       </div>

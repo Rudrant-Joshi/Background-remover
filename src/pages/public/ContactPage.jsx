@@ -30,7 +30,7 @@ export default function ContactPage() {
             Have questions about pricing, bulk API usage, or enterprise deployments? Our team is ready to help.
           </p>
           <p className="text-xs text-primary/70 mt-3 font-medium tracking-wide">
-            This website is made by Rudran Joshi
+            This website is made by Rudrant Joshi
           </p>
         </div>
 
